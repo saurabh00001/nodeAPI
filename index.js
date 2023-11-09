@@ -13,16 +13,16 @@ app.use(express.json());
 
 dotenv.config({path: './.env'});
 
-// const userrouting = require('./user/user.route');
-// const authcode = require('./auth/authcode.route');
-// const teacher = require('./teacher/details.route');
-// const student = require('./student/details.route');
-// require("dotenv").config();
+const userrouting = require('./user/user.route');
+const authcode = require('./auth/authcode.route');
+const teacher = require('./teacher/details.route');
+const student = require('./student/details.route');
+require("dotenv").config();
 
-// app.use(userrouting);
-// app.use(authcode);
-// app.use(teacher);
-// app.use(student);
+app.use(userrouting);
+app.use(authcode);
+app.use(teacher);
+app.use(student);
 
 
 app.listen(3000, function(req, res){
