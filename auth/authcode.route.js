@@ -31,7 +31,7 @@ router.get('/account/login',async(req, res, next)=>{
                     message: message
                 };
                 res.send(data);
-                console.log(message);
+                console.log(err);
             }
         })
         
