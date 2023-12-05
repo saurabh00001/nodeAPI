@@ -3,7 +3,7 @@ var router = express.Router();
 const Stripe = require('stripe');
 const cors = require("cors");
 const stripe = Stripe('');
-var request = require('rsk_test_51O7ty9SANh4m1yKlFj7KYAjs3zuzSr0lRJh1j1N20FGUiBvsCCu14cfbW4jr1qWvYYNFt1ZsRZ5VU4FR7GnoUEDT00IDgUSUqDequest');
+var request = require('sk_test_51O7ty9SANh4m1yKlFj7KYAjs3zuzSr0lRJh1j1N20FGUiBvsCCu14cfbW4jr1qWvYYNFt1ZsRZ5VU4FR7GnoUEDT00IDgUSUqD');
 const con = require('../connection');
 
 router.get('/student/details',async(req, res, next)=>{
