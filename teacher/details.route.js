@@ -2,6 +2,38 @@ const express = require('express');
 var router = express.Router();
 var request = require('request');
 const con = require('../connection');
+
+router.get('/teacher/chatUser/:id',async(req,res,next)=>{
+    try {
+        var header = JSON.parse(JSON.stringify(req.headers));
+        const user_id = req.params.id;
+        var role_id = header['role_id'];
+        var school_id = header['school_id'];
+        var teacher_id = header['teacher_id'];
+        
+        let selectSql = 'SELECT * FROM chatuesr where userid = '+user_id;
+
+        con.query(selectSql,function(err,result){
+                console.log(result);
+                var data = {
+                    status: 200,
+                    data: result
+                };
+                
+                res.status(200).send(data);
+            });
+
+    }catch (error) {
+
+        var resData = {
+            "status": 201,
+            "message":error
+        }
+        res.status(201).send(resData);
+        
+    }
+
+})
 router.get('/teacher/mystudent',async(req, res, next)=>{
     try {
         var header = JSON.parse(JSON.stringify(req.headers));
@@ -63,7 +95,7 @@ router.get('/teacher/mystudent',async(req, res, next)=>{
                     status: 200,
                     data: num
                 };
-                res.send(data);
+                res.status(200).send(data);
             });
         
         }else if(data == 'data'){
@@ -74,7 +106,7 @@ router.get('/teacher/mystudent',async(req, res, next)=>{
                     status: 200,
                     data: result
                 };
-                res.send(data);
+                res.status(200).send(data);
             });
 
         }else if (data == 'all'){
@@ -88,7 +120,7 @@ router.get('/teacher/mystudent',async(req, res, next)=>{
                     status: 200,
                     data: result
                 };
-                res.send(data);
+                res.status(200).send(data);
             });
 
         }else{
@@ -97,7 +129,7 @@ router.get('/teacher/mystudent',async(req, res, next)=>{
                 status: 401,
                 message: 'Something Wrong in Params'
             };
-            res.send(data);
+            res.status(401).send(data);
         }
 
     } catch (error) {
@@ -108,9 +140,12 @@ router.get('/teacher/mystudent',async(req, res, next)=>{
             message: message
         };
         console.log(message);
+        res.status(401).send(data);
         
     }
 })
+
+
 
 router.get('/teacher/myclasses',async(req, res, next)=>{
 
@@ -167,7 +202,7 @@ router.get('/teacher/myclasses',async(req, res, next)=>{
                                 upcoming : upcomming
                             };
 
-                            res.send(data);
+                            res.status(200).send(data);
 
                         }else{
 
@@ -178,7 +213,7 @@ router.get('/teacher/myclasses',async(req, res, next)=>{
                                 message: 'Something Wrong in Params'
                             };
 
-                            res.send(data);
+                            res.status(401).send(data);
 
                         }
                     })
@@ -191,7 +226,7 @@ router.get('/teacher/myclasses',async(req, res, next)=>{
                         message: 'Something Wrong in Params'
                     };
 
-                    res.send(data);
+                    res.status(401).send(data);
                 }
             });
 
@@ -218,7 +253,7 @@ router.get('/teacher/myclasses',async(req, res, next)=>{
                                 upcoming : upcomming
                             };
 
-                            res.send(data);
+                            res.status(200).send(data);
                         }
 
                     })
@@ -238,12 +273,13 @@ router.get('/teacher/myclasses',async(req, res, next)=>{
             message: error
         };
 
-        res.send(data);
+        res.status(401).send(data);
 
         console.log(error);
 
     }
 })
+
 
 router.post('/teacher/mystudent',async(req,res,next)=>{
 
@@ -307,13 +343,13 @@ router.post('/teacher/mystudent',async(req,res,next)=>{
                                         "date":{ insertid: resultstu.insertId,message:"Student Added Successfully"
                                         }
                                     }
-                                    res.send(resData);
+                                    res.status(200).send(resData);
                                 }else{
                                     var resData = {
                                         "status": 201,
                                         "message":"Something Went wrong in 3 Registation"
                                     }
-                                    res.send(resData);
+                                    res.status(201).send(resData);
                                 }
                             })
 
@@ -323,7 +359,7 @@ router.post('/teacher/mystudent',async(req,res,next)=>{
                                 "status": 201,
                                 "message":"Something Went wrong in 2 Registation"
                             }
-                            res.send(resData);
+                            res.status(201).send(resData);
                         }
                     })
 
@@ -332,7 +368,7 @@ router.post('/teacher/mystudent',async(req,res,next)=>{
                         "status": 201,
                         "message":"Something Went wrong User name is already Registerd"
                     }
-                    res.send(resData);
+                    res.status(201).send(resData);
                 }
             })
 
@@ -344,7 +380,7 @@ router.post('/teacher/mystudent',async(req,res,next)=>{
             "status": 201,
             "message":error
         }
-        res.send(resData);
+        res.status(201).send(resData);
         
     }
 
@@ -372,14 +408,14 @@ router.get('/teacher/mycourses',async(req,res,next)=>{
                     status: 200,
                     data: result
                 };
-                res.send(data);
+                res.status(200).send(data);
 
             }else{
                 var resData = {
                     "status": 201,
                     "message":err
                 }
-                res.send(resData);
+                res.status(201).send(resData);
             }
         })
 
@@ -388,7 +424,7 @@ router.get('/teacher/mycourses',async(req,res,next)=>{
             "status": 201,
             "message":error
         }
-        res.send(resData);
+        res.status(201).send(resData);
 
     }
 
@@ -415,13 +451,13 @@ router.get('/teacher/mybatches',async(req,res,next)=>{
                 "status": 200,
                 "data":result
             }
-            res.send(resData);
+            res.status(200).send(resData);
         }else{
             var resData = {
                 "status": 201,
                 "message":err
             }
-            res.send(resData);
+            res.status(200).send(resData);
         }
         
     })
@@ -449,14 +485,14 @@ router.get('/teacher/getBatchStudents',async(req,res,next)=>{
                     "status": 200,
                     "data":result
                 }
-                res.send(resData);
+                res.status(200).send(resData);
             }else{
                 var resData = {
                     "status": 201,
                     "message":"There Are Somting wrong to get Details. Please Try After some time.",
                     "err":err
                 }
-                res.send(resData);
+                res.status(201).send(resData);
             }
             
         })
@@ -467,7 +503,7 @@ router.get('/teacher/getBatchStudents',async(req,res,next)=>{
             "status": 203,
             "message":"Data Not Responding"
         }
-        res.send(resData);
+        res.status(203).send(resData);
         
     }
 
@@ -550,13 +586,13 @@ router.get('/teacher/notificationTeacher',async(req,res,next)=>{
                     "data":result,
                     "number": num
                 }
-                res.send(resData);
+                res.status(200).send(resData);
             }else{
                 var resData = {
                     "status": 201,
                     "message":err
                 }
-                res.send(resData);
+                res.status(201).send(resData);
             }
             
         })
@@ -605,13 +641,13 @@ router.get('/teacher/markattendance',async(req,res,next)=>{
                     "status": 200,
                     "data":resultw
                 }
-                res.send(resData);
+                res.status(200).send(resData);
             }else{
                 var resData = {
                     "status": 201,
                     "message":errw
                 }
-                res.send(resData);
+                res.status(201).send(resData);
             }
         })
         

@@ -2,8 +2,7 @@ const express = require('express');
 var router = express.Router();
 const Stripe = require('stripe');
 const cors = require("cors");
-const stripe = Stripe('');
-var request = require('sk_test_51O7ty9SANh4m1yKlFj7KYAjs3zuzSr0lRJh1j1N20FGUiBvsCCu14cfbW4jr1qWvYYNFt1ZsRZ5VU4FR7GnoUEDT00IDgUSUqD');
+const stripe = Stripe('sk_test_51O7ty9SANh4m1yKlFj7KYAjs3zuzSr0lRJh1j1N20FGUiBvsCCu14cfbW4jr1qWvYYNFt1ZsRZ5VU4FR7GnoUEDT00IDgUSUqD');
 const con = require('../connection');
 
 router.get('/student/details',async(req, res, next)=>{
@@ -31,14 +30,14 @@ router.get('/student/details',async(req, res, next)=>{
                 status: 200,
                 data: result 
             };
-            res.send(data);
+            res.status(200).send(data);
             
         }else{
             var data = {
                 status: 401,
                 message: 'Data Type is Not Valid!'
             };
-            res.send(data);
+            res.status(401).send(data);
         }
 
     } catch (error) {
@@ -49,6 +48,7 @@ router.get('/student/details',async(req, res, next)=>{
             message: error
         };
         console.log(error);
+        res.status(401).send(data);
         
     }
 });
@@ -87,14 +87,14 @@ router.get('/student/event',async(req, res, next)=>{
                 status: 200,
                 data: ddData
             };
-            res.send(data);
+            res.status(200).send(data);
             
         }else{
             var data = {
                 status: 401,
                 message: 'Data Type is Not Valid!'
             };
-            res.send(data);
+            res.status(401).send(data);
         }
 
     } catch (error) {
@@ -104,8 +104,9 @@ router.get('/student/event',async(req, res, next)=>{
             status: 401,
             message: error
         };
-        console.log(error);
         
+        console.log(error);
+        res.status(401).send(data);
     }
 });
 router.get('/student/mycourses',async(req, res, next)=>{
@@ -134,7 +135,7 @@ router.get('/student/mycourses',async(req, res, next)=>{
                 status: 200,
                 data: result 
             };
-            res.send(data);
+            res.status(200).send(data);
             
         }else if(type == 'number'){
             let sql = 'SELECT * FROM `enrollments` where student_id = '+student_id;
@@ -153,13 +154,13 @@ router.get('/student/mycourses',async(req, res, next)=>{
                 status: 200,
                 data: result 
             };
-            res.send(data);
+            res.status(200).send(data);
         }else{
             var data = {
                 status: 401,
                 message: 'Data Type is Not Valid!'
             };
-            res.send(data);
+            res.status(401).send(data);
         }
 
     } catch (error) {
@@ -169,8 +170,9 @@ router.get('/student/mycourses',async(req, res, next)=>{
             status: 401,
             message: error
         };
-        console.log(error);
         
+        console.log(error);
+        res.status(401).send(data);
     }
 });
 
@@ -199,14 +201,14 @@ router.get('/student/trandingcourses',async(req,res,next)=>{
             status: 200,
             data: result 
         };
-        res.send(data);
+        res.status(200).send(data);
 
     } catch (error) {
         var data = {
             status: 402,
             message: "Sometings went wrong Please try after sometime!"
         };
-        res.send(data);
+        res.status(402).send(data);
     }
 })
 
@@ -239,7 +241,7 @@ router.get('/student/invoice',async(req, res, next)=>{
                 status: 200,
                 data: result 
             };
-            res.send(data);
+            res.status(200).send(data);
             
         }else if(type == 'number'){
 
@@ -279,13 +281,13 @@ router.get('/student/invoice',async(req, res, next)=>{
                 status: 200,
                 data: amount 
             };
-            res.send(data);
+            res.status(200).send(data);
         }else{
             var data = {
                 status: 401,
                 message: 'Data Type is Not Valid!'
             };
-            res.send(data);
+            res.status(401).send(data);
         }
 
     } catch (error) {
@@ -296,6 +298,7 @@ router.get('/student/invoice',async(req, res, next)=>{
             message: error
         };
         console.log(error);
+        res.status(401).send(data);
         
     }
 });
@@ -331,6 +334,41 @@ router.post('/student/coursePayment',async(req,res,next)=>{
         res.status(200).send(response);
     } catch(e) {
         next(e);
+    }
+})
+
+router.get('/student/teacher',async(req,res,next)=>{
+    try{
+        var header = JSON.parse(JSON.stringify(req.headers));
+        var role_id = header['role_id'];
+        var school_id = header['school_id'];
+        var user_id = header['user_id'];
+        var student_id = header['student_id'];
+        var lead_id = header['lead_id'];
+        var type = header['type'];
+        let sql = 'SELECT DISTINCT en.roll_no, rt.teacher_id FROM `enrollments` as en LEFT JOIN `routines` as rt ON en.course_id = rt.class_id AND en.batch_id = rt.batch_id WHERE en.student_id = '+student_id+' AND en.batch_id IS NOT NULL AND rt.teacher_id <> 0';
+            
+        con.query(sql, (err, result) => {
+            if (err) {
+                console.log("Error ->",err);
+            } else {
+                let Enres = JSON.parse(JSON.stringify(result));
+                Enres.forEach(el => {
+                    let teacherSql = 'select email,name,user_id from  teachers where id='+el.teacher_id;
+                    con.query(teacherSql, (errr, resultt)=>{
+                        console.log(resultt);
+                        var data = {
+                            status: 200,
+                            data: resultt 
+                        };
+                        res.status(200).send(data);
+                    })
+                });
+            }
+        });
+    }
+    catch(e) {
+        return resnext(new HttpError('Authentication error','401'));
     }
 })
 

@@ -23,9 +23,9 @@ app.use(userrouting);
 app.use(authcode);
 app.use(teacher);
 app.use(student);
+const PORT = 3000;
 
-
-app.listen(3000, function(req, res){
-    console.log('port 3000 is listening');
+app.listen(PORT, function(req, res){
+    console.log(`Data Api Server running on http://localhost:${PORT}`);
 });
 

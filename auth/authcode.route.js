@@ -23,14 +23,14 @@ router.get('/account/login',async(req, res, next)=>{
                     status: 200,
                     data: result
                 };
-                res.send(data);
+                res.status(200).send(data);
             }else{
                 let message = 'Unauthorized: Wrong Username and Password';
                 var data = {
                     status: 401,
                     message: message
                 };
-                res.send(data);
+                res.status(401).send(data);
                 console.log(err);
             }
         })
@@ -45,7 +45,7 @@ router.get('/account/login',async(req, res, next)=>{
             message: message
         };
 
-        res.send(data);
+        res.status(401).send(data);
     }
 });
 
@@ -61,6 +61,7 @@ router.get('/getid',async(req,res,next)=>{
                 status: 401,
                 message: message
             };
+            return res.status(401).json(data)
         }else{
 
             if(role_id == '5'){
@@ -88,7 +89,7 @@ router.get('/getid',async(req,res,next)=>{
                         status: 200,
                         data: result
                     };
-                    res.send(data);
+                    res.status(200).send(data);
                 }else{
                     console.log(err);
                     let message = 'Someting Wrong Please Try Leter..';
@@ -96,7 +97,7 @@ router.get('/getid',async(req,res,next)=>{
                         status: 500,
                         message: message
                     };
-                    res.send(data);
+                    res.status(500).send(data);
                     console.log(message);
 
                 }
@@ -111,6 +112,7 @@ router.get('/getid',async(req,res,next)=>{
             status: 401,
             message: message
         };
+        res.status(401).send(data);
     }
 })
 module.exports = router;
