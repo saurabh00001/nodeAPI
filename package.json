@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:port1": "nodemon index.js",
     "start:port2": "nodemon server.js",
-    "start:both": "concurrently \"npm run start:port1\" \"npm run start:port2\""
+    "start": "concurrently \"npm run start:port1\" \"npm run start:port2\""
   },
   "author": "Saurabh",
   "license": "ISC",
